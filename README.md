@@ -1,33 +1,24 @@
-# HobbySync 🗓️🎯
-*(working title — swap in your actual project name)*
-
-Find something to do, when you're actually free to do it — and bring your friends along.
-
-HobbySync is a conversational assistant that looks at your real calendar availability and your location to recommend local hobbies and events, then helps you turn a plan into a group activity by inviting friends with a single link.
+# HobbyGenie
+HobbyGenie is a conversational assistant that looks at your calendar availability and your zipcode to recommend local hobbies and events.
 
 ---
 
-## Devpost Submission
-
 ### What we built
-HobbySync is a chat-first web app that removes the friction between "I have free time" and "I actually did something with it." Instead of separately checking your calendar, googling activities near you, and texting a group chat to coordinate, HobbySync does all three in one conversation:
+HobbyGenie is a chat web app that checks your calendar and finds activities near you. HobbyGenie does all three in one conversation:
 
-1. You sign in with Google.
-2. You land directly in a chat interface — no dashboards, no forms to hunt through.
+1. Sign in with Google account
+2. You land directly in a chat interface.
 3. You share your Google Calendar (or just tell the bot when you're free).
-4. You give a zip code and, optionally, a few preferences.
+4. You give a zip code and optionally, a few preferences.
 5. The assistant cross-references your open time slots with nearby events and hobbies and returns a filterable list.
 6. If you want company, you generate a shareable invite link so friends can join the plan and it becomes a group activity.
 
 ### How it functions
-- **Auth**: Google OAuth login gives us identity plus (with consent) calendar read access — no separate account system to build or maintain.
-- **Conversational interface**: A chat UI is the front door for the whole experience. The assistant asks clarifying questions ("Any other preferences?") only when they'd meaningfully narrow the search, and gracefully falls back to sensible defaults (popular local activities) if the user doesn't answer — the app never stalls waiting on input.
+- **Auth**: Google OAuth login gives us identity plus (with consent) calendar read access.
+- **Conversational interface**: A chat UI is the front door for the whole experience. The assistant asks clarifying questions ("Any other preferences?") and falls back to sensible defaults (popular local activities) if the user doesn't answer.
 - **Availability**: If the user grants calendar access, we pull free/busy blocks from the Google Calendar API and render them on-page. If that integration isn't ready in time, the assistant simply asks the user for their availability in natural language and reasons over the answer — same downstream result, lower-effort input path.
 - **Discovery**: Zip code + preferences are sent to the Google Maps/Places API to source nearby venues and events, which get merged with the user's free time windows into a ranked, filterable list (distance, category, time of day).
-- **Group activities**: A user can generate an invite link for a specific plan. Friends who open it can add the event to their own calendar and (in a stretch version) contribute their own availability, so the app can suggest a time that works for the whole group rather than just the organizer.
-
-### Impact
-Calendars are full of small, unclaimed pockets of free time that quietly go to waste because finding something worth doing in them takes more effort than it's worth. HobbySync collapses that decision cost to a single conversation, and by making it trivially easy to loop friends in, it nudges solo "I guess I'll scroll my phone" gaps into shared, in-person experiences — which is where most of the actual value (and memories) come from.
+- Next Steps: **Group activities**: A user can generate an invite link for a specific plan. Friends who open it can add the event to their own calendar and (in a stretch version) contribute their own availability, so the app can suggest a time that works for the whole group rather than just the organizer.
 
 ---
 
@@ -125,6 +116,4 @@ npm start           # starts chat UI on http://localhost:3000
 
 - **Chat-first, not dashboard-first**: A conversational interface lets the app ask only for the information it actually needs, in the order it needs it, instead of front-loading a form. This also makes the "no calendar access yet" fallback (asking for availability directly) a natural extension of the same interface rather than a separate mode.
 - **Graceful degradation on calendar sharing**: Calendar-button integration (rendering the calendar on-page) is treated as an enhancement, not a dependency — the core flow (chatbot asks/infers availability) works with or without it, so the feature can be descoped under time pressure without breaking the demo.
-- **Default to popular activities on non-response**: Rather than blocking on a preference question, the assistant times out to a sensible default. This keeps the funnel moving for users who just want quick suggestions, while still supporting personalization for users who engage.
-- **Backend-mediated API calls**: All Google Calendar/Maps calls are proxied through the backend so OAuth tokens and API keys never reach the client — important given the app is requesting calendar access.
-- **Shareable link over account-to-account "friending"**: Group coordination is scoped to a single link per plan rather than a full social graph, which is dramatically simpler to build in a hackathon timeframe while still delivering the core "do this together" value.
+- **Backend-mediated API calls**: All Google Calendar/Maps calls are proxied through the backend so OAuth tokens and API keys never reach the client.
