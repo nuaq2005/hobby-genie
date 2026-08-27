@@ -53,6 +53,65 @@ body {
   background-color: #826c5e;
 }
 
+.calendar-btn.ghost {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
+.calendar-btn.ghost:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.calendar-connected {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendar-status {
+  color: #ffffff;
+  font-size: 0.9rem;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-error {
+  background: #f6e0d8;
+  color: #7a2e12;
+  padding: 8px 24px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e6c9bd;
+}
+
+.availability-panel {
+  padding: 12px 24px;
+  background: #f1ede3;
+  border-bottom: 1px solid #ddd5c4;
+}
+
+.availability-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5c5344;
+  margin-bottom: 6px;
+}
+
+.availability-summary {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #33302a;
+}
+
 .message-list {
   flex: 1;
   overflow-y: auto;
@@ -74,6 +133,75 @@ body {
   padding: 16px 20px;
   border-radius: 16px;
   box-shadow: 0 5px 14px rgba(45, 40, 32, 0.08);
+}
+
+.message-bubble p {
+  white-space: pre-wrap;
+}
+
+.markdown > *:first-child {
+  margin-top: 0;
+}
+
+.markdown > *:last-child {
+  margin-bottom: 0;
+}
+
+.markdown p {
+  margin: 0 0 8px;
+}
+
+.markdown h4 {
+  margin: 12px 0 6px;
+  font-size: 0.95rem;
+}
+
+.markdown ul,
+.markdown ol {
+  margin: 4px 0 8px;
+  padding-left: 20px;
+}
+
+.markdown li {
+  margin: 2px 0;
+}
+
+.markdown code {
+  background-color: rgba(0, 0, 0, 0.06);
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.markdown a {
+  color: #6b584c;
+}
+
+.sources {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #d8d2c4;
+  font-size: 0.8rem;
+}
+
+.sources-label {
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.sources ul {
+  margin: 4px 0 0 16px;
+}
+
+.sources a {
+  color: #6b584c;
+}
+
+.input-form input:disabled,
+.send-btn:disabled,
+.surprise-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .message-bubble.bot {
