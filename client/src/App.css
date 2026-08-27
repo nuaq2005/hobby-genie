@@ -58,6 +58,75 @@ body {
   line-height: 1.4;
 }
 
+.message-bubble p {
+  white-space: pre-wrap;
+}
+
+.markdown > *:first-child {
+  margin-top: 0;
+}
+
+.markdown > *:last-child {
+  margin-bottom: 0;
+}
+
+.markdown p {
+  margin: 0 0 8px;
+}
+
+.markdown h4 {
+  margin: 12px 0 6px;
+  font-size: 0.95rem;
+}
+
+.markdown ul,
+.markdown ol {
+  margin: 4px 0 8px;
+  padding-left: 20px;
+}
+
+.markdown li {
+  margin: 2px 0;
+}
+
+.markdown code {
+  background-color: rgba(0, 0, 0, 0.06);
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.markdown a {
+  color: #6b584c;
+}
+
+.sources {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #d8d2c4;
+  font-size: 0.8rem;
+}
+
+.sources-label {
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.sources ul {
+  margin: 4px 0 0 16px;
+}
+
+.sources a {
+  color: #6b584c;
+}
+
+.input-form input:disabled,
+.send-btn:disabled,
+.surprise-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .message-bubble.bot {
   align-self: flex-start;
   background-color: #f0ede6;

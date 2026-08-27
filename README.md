@@ -80,15 +80,24 @@ npm install        # installs both frontend and backend deps if using a monorepo
 ```
 
 ### 2. Configure environment variables
-Create a `.env` file in the backend directory:
+Copy `server/.env.example` to `server/.env` and fill it in:
 ```
+# Chat (required) — free key from https://aistudio.google.com/apikey
+GEMINI_API_KEY=your_key_here
+GEMINI_MODEL=gemini-2.5-flash
+PORT=4000
+
+# Later, for OAuth / Maps / group plans
 GOOGLE_CLIENT_ID=your_client_id
 GOOGLE_CLIENT_SECRET=your_client_secret
 GOOGLE_REDIRECT_URI=http://localhost:3000/auth/callback
 GOOGLE_MAPS_API_KEY=your_maps_key
-LLM_API_KEY=your_llm_provider_key
 SESSION_SECRET=some_random_string
 ```
+
+The chat backend calls Gemini (`gemini-2.5-flash`) with Google Search grounding, so
+recommendations use real, current venue/event info. The React client proxies `/api/*`
+to the server (`client/package.json` `"proxy"`).
 
 ### 3. Run the backend
 ```bash
