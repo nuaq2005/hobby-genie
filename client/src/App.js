@@ -68,7 +68,7 @@ function App() {
       {/* Header */}
       <header className="chat-header">
         <h2 className="brand">
-          <img src="/genie-lamp%20(1).png" alt="HobbyGenie lamp" />
+          <img src="/genie-lamp.png" alt="HobbyGenie lamp" />
           HobbyGenie
         </h2>
         <div className="header-actions">
