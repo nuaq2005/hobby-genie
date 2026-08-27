@@ -1,1 +1,0 @@
-//front end in this folder, delete this file once react front end is set up
