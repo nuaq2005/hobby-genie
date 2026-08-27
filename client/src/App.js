@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import Markdown from './Markdown';
 
@@ -13,6 +13,62 @@ function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const [calendar, setCalendar] = useState({
+    connected: false,
+    profile: null,
+    loading: true,
+  });
+  const [availability, setAvailability] = useState(null); // { summary, freeSlots }
+  const [calError, setCalError] = useState('');
+
+  const loadFreeBusy = useCallback(async () => {
+    try {
+      const res = await fetch('/api/calendar/freebusy?days=7');
+      const data = await res.json();
+      if (res.ok) {
+        setAvailability({ summary: data.summary, freeSlots: data.freeSlots || [] });
+        setCalError('');
+      } else {
+        setCalError(data.error || 'Could not read your calendar.');
+      }
+    } catch {
+      setCalError('Could not reach the server for calendar data.');
+    }
+  }, []);
+
+  // Check auth state on load, and surface the ?calendar= result from the OAuth redirect.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const outcome = params.get('calendar');
+    if (outcome) {
+      window.history.replaceState({}, '', window.location.pathname);
+      if (outcome === 'denied') setCalError('Calendar access was declined.');
+      if (outcome === 'error') setCalError('Something went wrong connecting your calendar.');
+    }
+
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/status');
+        const data = await res.json();
+        setCalendar({ connected: !!data.connected, profile: data.profile || null, loading: false });
+        if (data.connected) loadFreeBusy();
+      } catch {
+        setCalendar({ connected: false, profile: null, loading: false });
+      }
+    })();
+  }, [loadFreeBusy]);
+
+  const connectCalendar = () => {
+    window.location.href = '/api/auth/google';
+  };
+
+  const disconnectCalendar = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    setCalendar({ connected: false, profile: null, loading: false });
+    setAvailability(null);
+    setCalError('');
+  };
+
   const askGenie = async (history) => {
     setLoading(true);
     try {
@@ -21,6 +77,7 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: history.map(({ sender, text }) => ({ sender, text })),
+          availability: availability?.summary || undefined,
         }),
       });
       const data = await res.json();
@@ -72,11 +129,35 @@ function App() {
           HobbyGenie
         </h2>
         <div className="header-actions">
-          <button className="calendar-btn" onClick={() => alert('Calendar connection coming soon!')}>
-            📅 Share Google Calendar
-          </button>
+          {calendar.loading ? null : calendar.connected ? (
+            <div className="calendar-connected">
+              <span className="calendar-status">
+                📅 {calendar.profile?.email || 'Calendar connected'}
+              </span>
+              <button className="calendar-btn ghost" onClick={disconnectCalendar}>
+                Disconnect
+              </button>
+            </div>
+          ) : (
+            <button className="calendar-btn" onClick={connectCalendar}>
+              📅 Share Google Calendar
+            </button>
+          )}
         </div>
       </header>
+
+      {calError && <div className="calendar-error">⚠️ {calError}</div>}
+
+      {calendar.connected && availability && (
+        <div className="availability-panel">
+          <span className="availability-label">Your free windows (next 7 days)</span>
+          {availability.freeSlots.length === 0 ? (
+            <p>No open windows found — you look booked solid!</p>
+          ) : (
+            <pre className="availability-summary">{availability.summary}</pre>
+          )}
+        </div>
+      )}
 
       {/* Message History */}
       <div className="message-list">

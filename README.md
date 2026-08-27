@@ -87,17 +87,33 @@ GEMINI_API_KEY=your_key_here
 GEMINI_MODEL=gemini-2.5-flash
 PORT=4000
 
-# Later, for OAuth / Maps / group plans
+# Google Calendar read access (OAuth 2.0)
 GOOGLE_CLIENT_ID=your_client_id
 GOOGLE_CLIENT_SECRET=your_client_secret
-GOOGLE_REDIRECT_URI=http://localhost:3000/auth/callback
+CLIENT_URL=http://localhost:3000
+OAUTH_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
+
+# Later, for Maps / group plans
 GOOGLE_MAPS_API_KEY=your_maps_key
-SESSION_SECRET=some_random_string
 ```
 
-The chat backend calls Gemini (`gemini-2.5-flash`) with Google Search grounding, so
-recommendations use real, current venue/event info. The React client proxies `/api/*`
-to the server (`client/package.json` `"proxy"`).
+The chat backend calls Gemini with Google Search grounding, so recommendations use
+real, current venue/event info. The React client proxies `/api/*` to the server via
+`client/src/setupProxy.js` (this replaces the old `"proxy"` string so full-page OAuth
+redirects are forwarded too).
+
+**Google Cloud setup for Calendar:**
+1. In the Google Cloud project, enable the **Google Calendar API**.
+2. Create an **OAuth 2.0 Client ID** of type *Web application*.
+3. Add `http://localhost:3000/api/auth/google/callback` as an **Authorized redirect URI**.
+4. On the OAuth consent screen, add the scope
+   `https://www.googleapis.com/auth/calendar.readonly` and add your Google account as
+   a test user (while the app is unverified).
+5. Put the client ID/secret in `server/.env` as above.
+
+The server holds tokens in memory (per session cookie), pulls free/busy from the
+Calendar API, derives open windows in 8am–10pm, shows them under the header, and
+passes them to the chat model so suggestions fit your schedule.
 
 ### 3. Run the backend
 ```bash
